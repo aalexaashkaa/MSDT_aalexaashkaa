@@ -30,7 +30,7 @@ N = 10           # число источников
 T = 100          # число временных шагов
 N_ITER = 300     # макс. итераций степенного метода
 TOL = 1e-10      # порог сходимости степенного метода
-ALPHA = 0.3      # параметр сглаживания (формула 6)
+ALPHA = 0.3      # параметр сглаживания (формула 6
 
 # Базовые характеристики источников q_i (различная «привлекательность»)
 Q = np.array([0.9, 0.8, 0.7, 0.6, 0.5, 0.45, 0.4, 0.35, 0.3, 0.25])
@@ -43,6 +43,7 @@ T0 = 50          # момент структурного перелома (сц�
 NOISE_STD = 0.15 # σ шума
 
 def generate_Y(t, scenario):
+  """Генерация матрицы сырых оценок Y(t) по одному из 4 сценариев."""
     Y = np.zeros((N, N))
     eps = np.random.normal(0, NOISE_STD, (N, N))
 
@@ -75,6 +76,7 @@ def generate_Y(t, scenario):
     return Y
 
 def normalize_columns(Y):
+  """Нормировка столбцов. Пустые столбцы → равномерное распределение."""
     X = Y.copy()
     col_sums = X.sum(axis=0)
     for j in range(N):
@@ -85,6 +87,7 @@ def normalize_columns(Y):
     return X
 
 def power_iteration(X, w_init=None):
+  """Степенной метод. Возвращает W, нормированный по L1."""
     if w_init is not None:
         w = w_init.copy()
     else:
@@ -101,6 +104,7 @@ def power_iteration(X, w_init=None):
     return w_new
 
 def run_scenario(scenario):
+  """Запуск одного сценария на T шагов. Возвращает историю W, W̃, S_C, Δ."""
     W_history = np.zeros((T, N))
     W_smooth_history = np.zeros((T, N))
     S_C_history = np.zeros(T)
