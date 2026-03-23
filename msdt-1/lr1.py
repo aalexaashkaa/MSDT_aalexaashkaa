@@ -13,13 +13,14 @@
   - Суммарная доля рейтинга группы S_C(t)
   - Норма изменения рейтинга Δ(t)
 """
-
+import os
 
 import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt, numpy as np
+import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.gridspec import GridSpec
-import os
+
+matplotlib.use("Agg")
 
 # ─── Воспроизводимость ───
 np.random.seed(42)
