@@ -77,6 +77,7 @@ def generate_Y(t, scenario):
 
     return Y
 
+
 def normalize_columns(Y):
     """Нормировка столбцов. Пустые столбцы → равномерное распределение."""
     X = Y.copy()
@@ -87,6 +88,7 @@ def normalize_columns(Y):
         else:
             X[:, j] = 1.0 / N
     return X
+
 
 def power_iteration(X, w_init=None):
     """Степенной метод. Возвращает W, нормированный по L1."""
@@ -104,6 +106,7 @@ def power_iteration(X, w_init=None):
             break
         w = w_new
     return w_new
+
 
 def run_scenario(scenario):
     """Запуск одного сценария на T шагов. Возвращает историю W, W̃, S_C, Δ."""
@@ -173,6 +176,7 @@ def source_color(i):
     if i in C:
         return colors_group[C.index(i)]
     return colors_other[i - len(C)]
+
 
 def source_label(i):
     tag = " (C)" if i in C else ""
