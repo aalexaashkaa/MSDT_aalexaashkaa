@@ -30,10 +30,12 @@ N = 10           # число источников
 T = 100          # число временных шагов
 N_ITER = 300     # макс. итераций степенного метода
 TOL = 1e-10      # порог сходимости степенного метода
-ALPHA = 0.3      # параметр сглаживания (формула 6
+ALPHA = 0.3      # параметр сглаживания (формула 6)
 
 # Базовые характеристики источников q_i (различная «привлекательность»)
-Q = np.array([0.9, 0.8, 0.7, 0.6, 0.5, 0.45, 0.4, 0.35, 0.3, 0.25])
+Q = np.array([0.9, 0.8, 0.7,
+              0.6, 0.5, 0.45,
+              0.4, 0.35, 0.3, 0.25])
 
 # Координированная группа — источники 0, 1, 2
 C = [0, 1, 2]
@@ -43,7 +45,7 @@ T0 = 50          # момент структурного перелома (сц�
 NOISE_STD = 0.15 # σ шума
 
 def generate_Y(t, scenario):
-  """Генерация матрицы сырых оценок Y(t) по одному из 4 сценариев."""
+    """Генерация матрицы сырых оценок Y(t) по одному из 4 сценариев."""
     Y = np.zeros((N, N))
     eps = np.random.normal(0, NOISE_STD, (N, N))
 
@@ -76,7 +78,7 @@ def generate_Y(t, scenario):
     return Y
 
 def normalize_columns(Y):
-  """Нормировка столбцов. Пустые столбцы → равномерное распределение."""
+    """Нормировка столбцов. Пустые столбцы → равномерное распределение."""
     X = Y.copy()
     col_sums = X.sum(axis=0)
     for j in range(N):
@@ -87,7 +89,7 @@ def normalize_columns(Y):
     return X
 
 def power_iteration(X, w_init=None):
-  """Степенной метод. Возвращает W, нормированный по L1."""
+    """Степенной метод. Возвращает W, нормированный по L1."""
     if w_init is not None:
         w = w_init.copy()
     else:
@@ -104,7 +106,7 @@ def power_iteration(X, w_init=None):
     return w_new
 
 def run_scenario(scenario):
-  """Запуск одного сценария на T шагов. Возвращает историю W, W̃, S_C, Δ."""
+    """Запуск одного сценария на T шагов. Возвращает историю W, W̃, S_C, Δ."""
     W_history = np.zeros((T, N))
     W_smooth_history = np.zeros((T, N))
     S_C_history = np.zeros(T)
@@ -140,10 +142,10 @@ def run_scenario(scenario):
 
 
 scenarios = {
-    "base":   "Базовый сценарий",
+    "base"  :   "Базовый сценарий",
     "sparse": "Разреженные оценки",
-    "group":  "Координированная группа",
-    "jump":   "Скачкообразное изменение",
+    "group" :  "Координированная группа",
+    "jump"  :   "Скачкообразное изменение",
 }
 
 results = {}
@@ -154,18 +156,18 @@ for key in scenarios:
 
 
 plt.rcParams.update({
-    "font.size": 11,
-    "axes.titlesize": 13,
-    "axes.labelsize": 11,
+    "font.size"      : 11,
+    "axes.titlesize" : 13,
+    "axes.labelsize" : 11,
     "legend.fontsize": 8.5,
-    "figure.dpi": 150,
-    "savefig.dpi": 200,
-    "font.family": "DejaVu Sans",
+    "figure.dpi"     : 150,
+    "savefig.dpi"    : 200,
+    "font.family"    : "DejaVu Sans",
 })
 
 colors_group = ["#d62728", "#e377c2", "#ff7f0e"]  # источники из C
-colors_other = ["#1f77b4", "#2ca02c", "#9467bd", "#8c564b",
-                "#17becf", "#bcbd22", "#7f7f7f"]    # остальные
+colors_other = ["#1f77b4", "#2ca02c", "#9467bd", 
+                "#8c564b", "#17becf", "#bcbd22", "#7f7f7f"]    # остальные
 
 def source_color(i):
     if i in C:
@@ -204,7 +206,8 @@ for row, key in enumerate(scenarios):
     ax.set_xlim(0, T - 1)
     ax.grid(True, alpha=0.3)
     if key == "jump":
-        ax.axvline(T0, color="gray", linestyle="--", alpha=0.7, label=f"t₀={T0}")
+        ax.axvline(T0, color="gray", linestyle="--",
+                   alpha=0.7, label=f"t₀={T0}")
 
     # Столбец 2: Доля рейтинга группы S_C(t)
     ax = axes[row, 1]
@@ -321,8 +324,8 @@ for key in scenarios:
 
 fig, ax = plt.subplots(figsize=(10, 5))
 style_map = {
-    "base":   {"color": "#1f77b4", "ls": "-",  "label": "Базовый"},
-    "sparse": {"color": "#ff7f0e", "ls": "--", "label": "Разреженный"},
+    "base":   {"color": "#1f77b4", "ls": "-",   "label": "Базовый"},
+    "sparse": {"color": "#ff7f0e", "ls": "--",  "label": "Разреженный"},
     "group":  {"color": "#d62728", "ls": "-.",  "label": "Группа (постоянно)"},
     "jump":   {"color": "#9467bd", "ls": ":",   "label": "Группа (с t₀=50)"},
 }
@@ -376,7 +379,8 @@ for idx, key in enumerate(scenarios):
     mean_w = np.mean(W_hist, axis=0)
     colors = [source_color(i) for i in range(N)]
     labels = [f"S{i+1}" for i in range(N)]
-    bars = axes[idx].bar(labels, mean_w, color=colors, edgecolor="white", linewidth=0.5)
+    bars = axes[idx].bar(labels, mean_w, color=colors,
+                         edgecolor="white", linewidth=0.5)
     axes[idx].set_title(scenarios[key], fontsize=10)
     axes[idx].set_xlabel("Источник")
     if idx == 0:
