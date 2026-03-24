@@ -172,13 +172,13 @@ colors_group = ["#d62728", "#e377c2", "#ff7f0e"]  # источники из C
 colors_other = ["#1f77b4", "#2ca02c", "#9467bd", 
                 "#8c564b", "#17becf", "#bcbd22", "#7f7f7f"]    # остальные
 
-def source_color(i):
+def get_source_color(i):
     if i in C:
         return colors_group[C.index(i)]
     return colors_other[i - len(C)]
 
 
-def source_label(i):
+def get_source_label(i):
     tag = " (C)" if i in C else ""
     return f"Источник {i+1}{tag}"
 
@@ -201,8 +201,8 @@ for row, key in enumerate(scenarios):
     for i in range(N):
         lw = 1.8 if i in C else 0.9
         alpha = 1.0 if i in C else 0.5
-        ax.plot(ts, W_hist[:, i], color=source_color(i),
-                linewidth=lw, alpha=alpha, label=source_label(i))
+        ax.plot(ts, W_hist[:, i], color=get_source_color(i),
+                linewidth=lw, alpha=alpha, label=get_source_label(i))
     ax.set_ylabel("Wᵢ(t)")
     ax.set_title(f"{scenarios[key]}: траектории рейтингов")
     if row == 0:
@@ -263,8 +263,8 @@ for key in scenarios:
     for i in range(N):
         lw = 2.0 if i in C else 0.8
         alpha = 1.0 if i in C else 0.45
-        ax1.plot(ts, W_hist[:, i], color=source_color(i),
-                 linewidth=lw, alpha=alpha, label=source_label(i))
+        ax1.plot(ts, W_hist[:, i], color=get_source_color(i),
+                 linewidth=lw, alpha=alpha, label=get_source_label(i))
     ax1.set_xlabel("t")
     ax1.set_ylabel("Wᵢ(t)")
     ax1.set_title("(а) Траектории рейтингов")
@@ -278,8 +278,8 @@ for key in scenarios:
     for i in range(N):
         lw = 2.0 if i in C else 0.8
         alpha = 1.0 if i in C else 0.45
-        ax2.plot(ts, W_sm[:, i], color=source_color(i),
-                 linewidth=lw, alpha=alpha, label=source_label(i))
+        ax2.plot(ts, W_sm[:, i], color=get_source_color(i),
+                 linewidth=lw, alpha=alpha, label=get_source_label(i))
     ax2.set_xlabel("t")
     ax2.set_ylabel("W̃ᵢ(t)")
     ax2.set_title(f"(б) Сглаженные траектории (α={ALPHA})")
@@ -381,7 +381,7 @@ fig, axes = plt.subplots(1, 4, figsize=(16, 4.5), sharey=True)
 for idx, key in enumerate(scenarios):
     W_hist = results[key][0]
     mean_w = np.mean(W_hist, axis=0)
-    colors = [source_color(i) for i in range(N)]
+    colors = [get_source_color(i) for i in range(N)]
     labels = [f"S{i+1}" for i in range(N)]
     bars = axes[idx].bar(labels, mean_w, color=colors,
                          edgecolor="white", linewidth=0.5)
